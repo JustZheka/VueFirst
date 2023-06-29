@@ -1,7 +1,6 @@
 const Program = {
     data() {
         return {
-            //sortTypes: {"NumAsc": 1, "NumDes": 2, "AlphAsc": 3, "AlphDes": 4},
             sortType: "NumAscending",
             inputValue: '',
             elements: [],
