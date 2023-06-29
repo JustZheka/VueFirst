@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Список</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <main>
+            <div id="program">
+                <form id="add">
+                    <input 
+                     class="form-text-lg"
+                     type="text" 
+                     placeholder="Please input something here" 
+                     v-model="inputValue"
+                     v-on:keypress.prevent.enter="addElem"/>
+                    <button class="btn btn-primary" v-on:click.prevent="addElem">Добавить</button>
+                </form>
+                <div class="Sort">
+                    <input type="radio" id="NumAsc" name="SortType" value="NumAscending" autocomplete="off" v-model="sortType" checked>
+                    <lable for="NumAsc">По возрастанию индекса</lable>
+
+                    <input type="radio" id="NumDes" name="SortType" value="NumDescending" autocomplete="off" v-model="sortType">
+                    <lable for="NumDes">По убыванию индекса</lable>
+
+                    <input type="radio" id="AlphAsc" name="SortType" value="AlphAscending" autocomplete="off" v-model="sortType">
+                    <lable for="AlphAsc">В алфавитном порядке по возрастанию</lable>
+
+                    <input type="radio" id="AlphDes" name="SortType" value="AlphDescending" autocomplete="off" v-model="sortType">
+                    <lable for="AlphDes">В алфавитном порядке по убыванию</lable>
+                </div>
+                <div class="list-status" v-if="elements.length != 0">Список:
+                    <ul class="list-group-item-info">
+                        <li class="list" v-for="(element, index) in sortedList">
+                            <span>{{ element.idx + 1 }} -</span>
+                            <span v-if="!element.edit">
+                                <span>{{ element.value }}</span>
+                                <button class="btn btn-primary" v-on:click="editElem(index)" data-action="Edit">Редактировать</button>
+                                <button class="btn btn-danger" v-on:click="removeElem(index)" data-action="Delete">X</button>
+                            </span>
+                            <span v-else>
+                                <input 
+                                    class="form-text-sm"
+                                    type="text" 
+                                    placeholder="Please edit here" 
+                                    v-model="elements[index].editValue"
+                                    v-on:keypress.enter="okEdit(index)"/>
+                                    <button class="btn btn-success" v-on:click="okEdit(index)" data-action="Edit">OK</button>
+                                    <button class="btn btn-danger" v-on:click="cancelEdit(index)" data-action="Delete">Отмена</button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="list-status" v-if="elements.length == 0">Список пуст</div>
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
