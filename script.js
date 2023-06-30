@@ -4,7 +4,8 @@ const Program = {
             sortType: "NumAscending",
             inputValue: '',
             elements: [],
-            editMode: []
+            editMode: [],
+            isValid: true
         }
     },
     methods: {
@@ -12,11 +13,10 @@ const Program = {
             this.inputValue = this.inputValue.trim();
 
             if (this.inputValue == '') {
-                alert("invalid input data");
+                this.isValid = false;
                 return false;
             }
-
-            this.elements.push({idx: this.elements.length, value: this.inputValue, edit: false, editValue: ''});
+            this.elements.push({idx: this.elements.length, value: this.inputValue, edit: false, editValue: '', isValid: true});
             this.inputValue = '';
         },
         removeElem(index) {
@@ -33,14 +33,14 @@ const Program = {
             this.elements[index].editValue = this.elements[index].value;
         },
         okEdit(index) {
-            this.elements[index].editValue = this.elements[index].editValue .trim();
+            this.elements[index].editValue = this.elements[index].editValue.trim();
 
             if (this.elements[index].editValue  == '') {
-                alert("invalid input data");
-                this.cancelEdit();
+                this.elements[index].isValid = false;
                 return false;
             }
 
+            this.elements[index].isValid = true;
             this.elements[index].value = this.elements[index].editValue;
             this.elements[index].editValue = '';
             this.elements[index].edit = false;
@@ -48,35 +48,44 @@ const Program = {
         cancelEdit(index) {
             this.elements[index].editValue = '';
             this.elements[index].edit = false;
+            this.elements[index].isValid = true;
+        },
+        comparator(a, b) {
+            if (a > b) {
+                return 1;
+            }
+            else if (a < b) {
+                return -1;
+            }
+            return 0;
         }
     },
     computed: {
         sortedList() {
-            let sType = this.sortType;
+            let self = this;
             return this.elements.sort(function(a, b) {
-                switch (sType) {
+                let A = a.value.toUpperCase();
+                let B = b.value.toUpperCase();
+                switch (self.sortType) {
                     case "NumAscending":
-                        return comparator(a.idx, b.idx);
+                        return self.comparator(a.idx, b.idx);
                     case "NumDescending":
-                        return comparator(b.idx, a.idx);
+                        return self.comparator(b.idx, a.idx);
                     case "AlphAscending":
-                        return comparator(a.value, b.value);
+                        return self.comparator(A, B);
                     case "AlphDescending":
-                        return comparator(b.value, a.value);
+                        return self.comparator(B, A);
                 }
             });
         }
+    },
+    watch: {
+        inputValue(newInput) {
+            if (!this.isValid && newInput != '') {
+                this.isValid = true;
+            }
+        }
     }
 };
-
-function comparator(a, b) {
-    if (a > b) {
-        return 1;
-    }
-    else if (a < b) {
-        return -1;
-    }
-    return 0;
-}
 
 Vue.createApp(Program).mount('#program');

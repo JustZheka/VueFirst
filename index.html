@@ -8,14 +8,17 @@
     <body>
         <main>
             <div id="program">
-                <form id="add">
+                <form id="add" v-on:submit.prevent="addElem">
                     <input 
-                     class="form-text-lg"
+                     id="mainInput"
+                     class="form-control-lg"
                      type="text" 
                      placeholder="Please input something here" 
-                     v-model="inputValue"
-                     v-on:keypress.prevent.enter="addElem"/>
-                    <button class="btn btn-primary" v-on:click.prevent="addElem">Добавить</button>
+                     v-model="inputValue"/>
+                     <button class="btn btn-primary">Добавить</button>
+                    <div v-if="!isValid" class="text-danger">
+                        The text must not be empty or consist of spaces
+                    </div>
                 </form>
                 <div class="Sort">
                     <input type="radio" id="NumAsc" name="SortType" value="NumAscending" autocomplete="off" v-model="sortType" checked>
@@ -40,14 +43,16 @@
                                 <button class="btn btn-danger" v-on:click="removeElem(index)" data-action="Delete">X</button>
                             </span>
                             <span v-else>
-                                <input 
-                                    class="form-text-sm"
-                                    type="text" 
-                                    placeholder="Please edit here" 
-                                    v-model="elements[index].editValue"
-                                    v-on:keypress.enter="okEdit(index)"/>
-                                    <button class="btn btn-success" v-on:click="okEdit(index)" data-action="Edit">OK</button>
-                                    <button class="btn btn-danger" v-on:click="cancelEdit(index)" data-action="Delete">Отмена</button>
+                                <form v-on:submit.prevent="okEdit(index)" style="display: inline">
+                                    <input 
+                                        class="form-text-sm"
+                                        type="text" 
+                                        placeholder="Please edit here" 
+                                        v-model="elements[index].editValue"/>
+                                        <button class="btn btn-success" data-action="Edit">OK</button>
+                                        <button class="btn btn-danger" v-on:click="cancelEdit(index)" data-action="Delete">Отмена</button>
+                                        <div v-if="!elements[index].isValid" class="text-danger">The text must not be empty or consist of spaces</div>
+                                </form>
                             </span>
                         </li>
                     </ul>
